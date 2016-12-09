@@ -1,0 +1,19 @@
+{
+  "name": "csv-to-json",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/birendra-getmyplace/csv-to-json.git"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Birendra Kumar",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "body-parser": "~1.0.1",
+    "csvtojson": "^1.0.3",
+    "express": "~4.0.0",
+    "morgan": "~1.0.0"
+  }
+}
