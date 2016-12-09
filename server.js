@@ -6,7 +6,10 @@ var express       = require('express');
 var bodyParser    = require('body-parser');
 var app           = express();
 var morgan        = require('morgan');
-var ConvertToJSON = require('./app/models/ConvertToJSON');
+var request = require('request');
+var Converter = require("csvtojson").Converter;
+
+var CsvConverter = new Converter({constructResult:false});
 
 // configure app
 app.use(morgan('dev')); // log requests to the console
@@ -42,12 +45,15 @@ router.route('/convert/csv/to/json?')
             // convert csv to json from csv file
       .get(function(req, res) {
         if (req.query.q) {
-          ConvertToJSON.convertToJson(req.query.q, function(error, result) {
-              if (error) {
-                res.send('Error while converting csv to json. Error: ' + error);
-              }
-              res.json(result);
-            });
+          var objects = [];
+          CsvConverter.on("end_parsed", function (result) {
+             res.json(objects);
+          });
+          //record_parsed will be emitted each time a row has been parsed.
+          CsvConverter.on("record_parsed", function(result) {
+              objects.push(result);
+          });
+          request.get(req.query.q).pipe(CsvConverter);
         } else {
           res.send('Please enter valid url!');
         }
